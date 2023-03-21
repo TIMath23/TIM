@@ -101,11 +101,43 @@ export class FormulaEditorComponent {
         // became visible so save what was in editor
         if (isVis) {
             this.oldContent = this.parseOldContent(this.editor.content);
+            const isMulti = this.getInitialMultilineSetting();
+            this.isMultilineFormulaControl.setValue(isMulti);
         }
     }
     private _visible: boolean = false;
 
     constructor() {}
+
+    /**
+     * Find the line where cursor is in editor
+     */
+    getCurrentLine() {
+        const cursorPos = this.oldContent.before.length;
+        const text = this.editor.content;
+        let startI = cursorPos;
+        let endI = cursorPos;
+        if (text[startI] === "\n") {
+            startI--;
+        }
+        while (startI >= 0 && text[startI] !== "\n") {
+            startI--;
+        }
+        while (endI < text.length && text[endI] !== "\n") {
+            endI++;
+        }
+        return text.slice(startI + 1, endI);
+    }
+
+    /**
+     * Determine whether the user wants to create a multiline or an inline formula
+     */
+    getInitialMultilineSetting() {
+        const currentLine = this.getCurrentLine();
+        const isTextInLine = currentLine.trim().length > 0;
+        // should be multiline if no real text in line
+        return !isTextInLine;
+    }
 
     /**
      * Finds cursor location from editor
@@ -115,12 +147,21 @@ export class FormulaEditorComponent {
         if (!this.editor.insert) {
             return -1;
         }
+
         const cursorMarker = "│";
 
         // add cursor character to know where cursor is
         this.editor.insert(cursorMarker);
         // find its index
-        return this.editor.content.indexOf(cursorMarker);
+        const cursorI = this.editor.content.indexOf(cursorMarker);
+        // also remove added cursor character from editor
+        this.editor.content =
+            this.editor.content.slice(0, cursorI) +
+            this.editor.content.slice(cursorI + 1);
+        if (this.editor.setSelection) {
+            this.editor.setSelection(cursorI);
+        }
+        return cursorI;
     }
 
     /**
@@ -135,13 +176,12 @@ export class FormulaEditorComponent {
                 after: "",
             };
         }
-        // split into two ignoring the cursor character
+        // split into two
         const result = {
             before: this.editor.content.slice(0, cursorI),
-            after: this.editor.content.slice(cursorI + 1),
+            after: this.editor.content.slice(cursorI),
         };
-        // also remove added cursor character from editor
-        this.editor.content = result.before + result.after;
+
         return result;
     }
 
