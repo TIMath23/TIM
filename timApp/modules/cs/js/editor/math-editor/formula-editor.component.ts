@@ -100,7 +100,7 @@ export class FormulaEditorComponent {
         this._visible = isVis;
         // became visible so save what was in editor
         if (isVis) {
-            this.oldContent = this.parseOldContent(this.editor.content);
+            this.parseOldContent(this.editor.content);
             const isMulti = this.getInitialMultilineSetting();
             this.isMultilineFormulaControl.setValue(isMulti);
         }
@@ -113,7 +113,7 @@ export class FormulaEditorComponent {
      * Find the line where cursor is in editor
      */
     getCurrentLine() {
-        const cursorPos = this.oldContent.before.length;
+        const cursorPos = this.getCursorLocation();
         const text = this.editor.content;
         let startI = cursorPos;
         let endI = cursorPos;
@@ -140,14 +140,24 @@ export class FormulaEditorComponent {
     }
 
     /**
-     * Finds cursor location from editor
-     * @return index in editor.content or -1 if editor.insert not defined
+     * After oldContent is set cursor is between
+     * oldContent parts
      */
-    findCursorLocation(): number {
-        if (!this.editor.insert) {
-            return -1;
-        }
+    getCursorLocation() {
+        return this.oldContent.before.length;
+    }
 
+    /**
+     * Splits string into two parts if possible at cursor location
+     * @param str
+     */
+    parseOldContent(str: string) {
+        if (!this.editor.insert) {
+            return {
+                before: this.editor.content,
+                after: "",
+            };
+        }
         const cursorMarker = "│";
 
         // add cursor character to know where cursor is
@@ -158,31 +168,11 @@ export class FormulaEditorComponent {
         this.editor.content =
             this.editor.content.slice(0, cursorI) +
             this.editor.content.slice(cursorI + 1);
-        if (this.editor.setSelection) {
-            this.editor.setSelection(cursorI);
-        }
-        return cursorI;
-    }
 
-    /**
-     * Splits string into two parts if possible at cursor location
-     * @param str
-     */
-    parseOldContent(str: string): OldContent {
-        const cursorI = this.findCursorLocation();
-        if (cursorI === -1) {
-            return {
-                before: this.editor.content,
-                after: "",
-            };
-        }
-        // split into two
-        const result = {
+        this.oldContent = {
             before: this.editor.content.slice(0, cursorI),
             after: this.editor.content.slice(cursorI),
         };
-
-        return result;
     }
 
     /**
@@ -298,8 +288,10 @@ export class FormulaEditorComponent {
         // content hasn't changed from what it was before opening formula editor
         // so cancel
         if (
-            this.oldContent.before + this.oldContent.after ===
-                this.editor.content ||
+            (this.oldContent.before !== undefined &&
+                this.oldContent.after !== undefined &&
+                this.oldContent.before + this.oldContent.after ===
+                    this.editor.content) ||
             confirm($localize`Are you sure? Cancel will clear the editor.`)
         ) {
             this.editor.content =
