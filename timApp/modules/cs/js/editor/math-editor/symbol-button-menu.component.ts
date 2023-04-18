@@ -118,8 +118,8 @@ export class SymbolsPipe implements PipeTransform {
             <div class="symbol-button-menu" [class.symbol-button-menu-open]="isOpen()">
                 <div class="buttons-container math display" [hidden]="!isOpen()">
                     <button class="symbol-button" 
-                            title="{{item.expl}}" 
                             *ngFor="let item of templateButtons | symbols:'symbol'" 
+                            title="{{item.expl}}" 
                             (mouseup)="addFormula(item.data, item.data, true)"
                      >{{item.text}}</button>
                 </div>
