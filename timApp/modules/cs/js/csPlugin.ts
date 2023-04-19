@@ -1156,7 +1156,17 @@ export function createTemplateButtons(
                 item.data = parsed[1];
             }
             if (parsed.length > 2 && parsed[2] !== "") {
-                item.expl = parsed[2];
+                // Placeholder expl if third parsed value was used for hasMath or isSymbol... feel free to replace this
+                if (
+                    parsed[2] == "math" ||
+                    parsed[2] == "q" ||
+                    parsed[2] == "s" ||
+                    parsed[2] == "t"
+                ) {
+                    item.expl = item.data;
+                } else {
+                    item.expl = parsed[2];
+                }
             }
             if (parsed.length > 3) {
                 item.placeholders = [];
@@ -1173,15 +1183,6 @@ export function createTemplateButtons(
                 containsCommonSymbol > 1
             ) {
                 item.isSymbol = "q";
-            }
-            // Placeholder expl if third parsed value was used for hasMath or isSymbol... feel free to replace this
-            if (
-                item.expl == "math" ||
-                item.expl == "q" ||
-                item.expl == "s" ||
-                item.expl == "t"
-            ) {
-                item.expl = item.data;
             }
             for (let i = 3; i < parsed.length; i++) {
                 const p = parsed[i];
