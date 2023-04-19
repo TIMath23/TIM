@@ -1175,7 +1175,12 @@ export function createTemplateButtons(
                 item.isSymbol = "q";
             }
             // Placeholder expl if third parsed value was used for hasMath or isSymbol... feel free to replace this
-            if (item.expl == "math" || item.expl == "q" || item.expl == "s") {
+            if (
+                item.expl == "math" ||
+                item.expl == "q" ||
+                item.expl == "s" ||
+                item.expl == "t"
+            ) {
                 item.expl = item.data;
             }
             for (let i = 3; i < parsed.length; i++) {
