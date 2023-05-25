@@ -55,6 +55,10 @@ const ERROR_MESSAGE_DELAY = 1000;
     selector: "cs-formula-field",
     template: `
         <div class="formula-field" [class.active-field]="isActive">
+            <div class="formula-field-undoredo btn-group btn-group-xs" *ngIf="isActive">
+                <button class="btn btn-default" (click)="handleUndo()" i18n title="Ctrl+z"><b>Undo</b></button>
+                <button class="btn btn-default" (click)="handleRedo()" i18n title="Ctrl+y"><b>Redo</b></button>
+            </div>
             <div class="input-container" #inputContainer>
                 <span
                         class="visual-input"

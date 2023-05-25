@@ -15,6 +15,15 @@
     justify-content: center;
   }
 
+  .formula-field-undoredo {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
+    justify-content: left;
+    font-weight: bold;
+    font-family: "Courier New", Courier, serif;
+  }
+
   .input-container {
     padding: 0.25em;
     display: flex;
