@@ -8088,6 +8088,22 @@
           <context context-type="linenumber">591,589</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="8571436112353957798" datatype="html">
+        <source>Undo </source>
+        <target state="new">Ångra </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">modules/cs/js/editor/math-editor/formula-field.component.ts</context>
+          <context context-type="linenumber">59</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="2259282809412758314" datatype="html">
+        <source>Redo </source>
+        <target state="new">Göra om </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">modules/cs/js/editor/math-editor/formula-field.component.ts</context>
+          <context context-type="linenumber">60</context>
+        </context-group>
+      </trans-unit>
     </body>
   </file>
 </xliff>
